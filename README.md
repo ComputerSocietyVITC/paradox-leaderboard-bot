@@ -9,3 +9,7 @@
 TOKEN=the_discord_bot_token
 WRITING_CHANNEL_ID=the channel id we're writing it to
 LEADERBOARD_URI=the uri from which we are getting the leaderboard
+
+**Running**
+
+`yarn` followed by `yarn build` followed by `yarn start`
