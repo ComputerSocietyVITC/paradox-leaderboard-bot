@@ -1,7 +1,7 @@
 {
     "scripts": {
         "build": "tsc",
-        "dev": "nodemon .",
+        "dev": "nodemon -r dotenv/config src/index.ts",
         "start": "node bin"
     },
     "dependencies": {
