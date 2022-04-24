@@ -1,14 +1,15 @@
 {
     "scripts": {
-      "build": "tsc",
-      "dev": "nodemon .",
-      "start": "node bin"
+        "build": "tsc",
+        "dev": "nodemon .",
+        "start": "node bin"
     },
     "dependencies": {
         "axios": "^0.26.1",
         "discord.js": "^13.6.0"
     },
     "devDependencies": {
+        "dotenv": "^16.0.0",
         "ts-node": "^10.7.0",
         "tsc": "^2.0.4",
         "typescript": "^4.6.3"

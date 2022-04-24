@@ -1,37 +1,47 @@
 import axios from "axios";
 import { Client, Intents } from "discord.js";
 
+type User = { username: string; currentLevel: number };
+
 const intents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES];
 
 const client = new Client({ intents });
 
-let sleeping = false;
+let leaderboard: User[] = [];
+
+const fetchLeaderboard = async () => {
+    const response = await axios.get(process.env.LEADERBOARD_URI!);
+    leaderboard = response.data as User[];
+    setTimeout(fetchLeaderboard, 60_000);
+};
 
 (async () => {
+    await fetchLeaderboard();
+
     await client.login(process.env.TOKEN).catch(console.error);
 
     client.once("ready", () => console.log("ready"));
 
     client.on("messageCreate", async message => {
-        if (message.content === "#ping") {
+        if (message.content === "^ping") {
             message.channel.send("pong");
             return;
         }
-        if (message.content === "#lb") {
-            if (sleeping) {
-                await message.reply("Leaderboard was just requested");
-                return;
-            }
-            sleeping = true;
-            const { data } = await axios.get(process.env.LEADERBOARD_URI!);
-            message.channel.sendTyping();
-            const top = data.slice(3, 16) as { username: string }[];
-            const adapted = top
-                .map(({ username }, idx) => `${idx + 1}: ${username}`)
-                .filter(x => !x.includes("Admin"));
-            const stringList = adapted.join("\n");
-            await message.channel.send(stringList);
-            new Promise(resolve => setTimeout(resolve, 20_000)).then(() => (sleeping = false));
+        if (message.content === "^lb") {
+            const msg = await message.channel.send("Fetching leaderboard...");
+            msg.edit(
+                [
+                    "**Leaderboard** (updates every 2 minutes)",
+                    ...leaderboard
+                        .slice(0, 15)
+                        .filter(({ username }) => !username.includes("Admin"))
+                        .slice(0, 10)
+                        .map(
+                            ({ username, currentLevel }) =>
+                                `\`${username}\` is at level ${currentLevel}`
+                        ),
+                ].join("\n")
+            );
         }
     });
 })();
