@@ -7,8 +7,12 @@
 **Environment variables**
 
 TOKEN=the_discord_bot_token
+
 WRITING_CHANNEL_ID=the channel id we're writing it to
+
 LEADERBOARD_URI=the uri from which we are getting the leaderboard
+
+REFRESH_TIME=the time interval at which to hit the server (in milliseconds)
 
 **Running**
 
