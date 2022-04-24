@@ -25,8 +25,10 @@ let sleeping = false;
             sleeping = true;
             const { data } = await axios.get(process.env.LEADERBOARD_URI!);
             message.channel.sendTyping();
-            const top = data.slice(3, 13) as { username: string }[];
-            const adapted = top.map(({ username }, idx) => `${idx + 1}: ${username}`);
+            const top = data.slice(3, 16) as { username: string }[];
+            const adapted = top
+                .map(({ username }, idx) => `${idx + 1}: ${username}`)
+                .filter(x => !x.includes("Admin"));
             const stringList = adapted.join("\n");
             await message.channel.send(stringList);
             new Promise(resolve => setTimeout(resolve, 20_000)).then(() => (sleeping = false));
